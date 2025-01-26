@@ -183,21 +183,7 @@ def run_experiment(
     )
 
     ##############################################################
-    # Visualize Grad-CAM for the first test sample
-    # image = x_test_transformed[:1]  # Select a single transformed test sample
-    #     class_idx = np.argmax(mean_preds[0])  # Predicted transformation class
-    # last_conv_layer_name = "conv2d_15"  # Update with your model's last conv layer name (index 45)
-
-    # heatmap = grad_cam(new_model, image, class_idx, last_conv_layer_name)
-    # overlay = overlay_heatmap(image[0], heatmap)
-
-    # plt.imshow(overlay)
-    # plt.title("Grad-CAM Overlay")
-    # plt.axis("off")
-    # plt.savefig(os.path.join(OUTPUT_DIR, f'gradcam_{TODAYS_DT}.png'))
-    # # plt.show()
-    # plt.close()
-
+    # Visualize Grad-CAM 
     plot_all_gradcams(
         model=new_model,
         images=x_test_transformed,
@@ -232,11 +218,7 @@ def run_experiment(
         output_dir=os.path.join(OUTPUT_DIR, "top_scores")
     )
 
-    # Step 5: Combine Predictions, Uncertainty, and Scores
-    # def combine_scores(mean_preds, uncertainty, normality_scores):
-    #     combined_scores = normality_scores - np.mean(uncertainty, axis=1)  # Penalize high uncertainty
-    #     return combined_scores
-
+    # Combine Predictions, Uncertainty, and Scores
     def combine_scores(mean_preds, uncertainty, normality_scores, n_transforms):
         """
         Combine normality scores with uncertainty to produce a final score.

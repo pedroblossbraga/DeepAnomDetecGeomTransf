@@ -15,12 +15,6 @@ def add_colorbar(im, width=None, pad=None, **kwargs):
     cax = fig.add_axes([l + w + pad, b, width, h])   # define cbar Axes
     return fig.colorbar(im, cax=cax, **kwargs)       # draw cbar
 
-
-# def add_colorbar(im):
-#     """Adds a colorbar to the plot."""
-#     cbar = plt.colorbar(im, ax=plt.gca())
-#     cbar.ax.tick_params(labelsize=8)
-
 def normalize_image(image, target_range=(0, 255)):
     """Normalize an image to a specified range."""
     min_val, max_val = np.min(image), np.max(image)

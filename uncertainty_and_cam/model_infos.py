@@ -63,11 +63,6 @@ def generate_layer_summary(model_summary):
         summary_mapping[layer["index"]] = layer_str
     return summary_mapping
 
-# # Generate and print the mapping
-# layer_summary = generate_layer_summary(model_summary)
-# for index, summary in layer_summary.items():
-#     print(f"{index}: {summary}")
-
 def get_layer_description(layer_name, model):
     """
     Get a description of why a layer is visualized.

@@ -44,25 +44,3 @@ def create_wide_residual_network(input_shape, num_classes, depth, widen_factor=1
     out = dense(num_classes)(out)
     out = Activation('softmax')(out)
     return Model(inp, out)
-
-# import numpy as np
-# import matplotlib.pyplot as plt
-# from keras.models import Model
-
-# # Assuming create_wide_residual_network is defined
-# # from model import create_wide_residual_network
-
-# # Step 1: Recreate the model
-# input_shape = (64, 64, 3)  # Update with the actual input shape
-# n_transforms = 72  # Update based on your transformer
-# n, k = 16, 8  # Parameters for the wide residual network
-# model = create_wide_residual_network(input_shape, n_transforms, n, k)
-
-# # Step 2: Load saved weights
-# # weights_path = './results_experiments/cats_vs_dogs_class_0.weights.h5'
-# weights_path = os.path.join(OUTPUT_DIR,
-#                             'cats_vs_dogs_class_0.weights.h5')
-
-# model.load_weights(weights_path)
-
-# model.summary()

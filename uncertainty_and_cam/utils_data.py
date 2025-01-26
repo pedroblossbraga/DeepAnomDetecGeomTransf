@@ -20,11 +20,6 @@ def load_cats_vs_dogs_tfds(img_size=(64, 64)):
         image = tf.cast(image, tf.float32) / 127.5 - 1.0
         return image, label
 
-    # Load the dataset
-    # train_split = 'train[:80%]'
-    # test_split = 'train[80%:]'
-    # train_ds = tfds.load('cats_vs_dogs', split=train_split, as_supervised=True)
-    # test_ds = tfds.load('cats_vs_dogs', split=test_split, as_supervised=True)
     (train_ds, valid_ds, test_ds), info = tfds.load(
         'cats_vs_dogs',
         # take 50% for training, 25% for validation, and 25% for testing
@@ -141,8 +136,3 @@ def get_class_name_from_index(index, dataset_name):
     }
 
     return ind_to_name[dataset_name][index]
-
-# N_sample_test = 20
-# x_test, y_test = load_dataset_tf(
-#             os.path.join(OUTPUT_DIR,  f'cats_vs_dogs_data_split80_{int(N_sample_test)}_test.tfrecord')
-#         )

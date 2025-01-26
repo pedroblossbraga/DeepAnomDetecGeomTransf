@@ -60,9 +60,7 @@ def get_transformation_attributes(t_idx):
 
 class AffineTransformation:
     def __init__(self, flip, tx, ty, k_90_rotate,
-                #  scale=1.0,
                  zoom = 1.0,
-                #  shear=0,
                  crop_size=None,
                  color_jitter=False, histogram_eq=False,
                  hist_eq_quantile=0.7,
@@ -73,9 +71,7 @@ class AffineTransformation:
         self.k_90_rotate = k_90_rotate
 
         # new transformations
-        # self.scale = scale
         self.zoom = zoom
-        # self.shear = shear
         self.crop_size = crop_size
         self.color_jitter = color_jitter
         self.histogram_eq = histogram_eq
@@ -149,29 +145,7 @@ class AffineTransformation:
 
         # Histogram Equalization
         if self.histogram_eq:
-            # # Normalize to [0, 1] if input is in range [-1, 1]
-            # res_x = (res_x + 1) / 2 if np.min(res_x) < 0 else res_x
-            
-            # # Apply histogram equalization
-            # # res_x = exposure.equalize_hist(res_x)
-            # # Apply adaptive histogram equalization with clip limit
-            # res_x = exposure.equalize_adapthist(res_x / 255.0, clip_limit=0.8)  # Clip limit to reduce over-enhancement
-            
-            # # Scale to [0, 255]
-            # res_x = res_x * 255
-            # res_x = np.clip(res_x, 0, 255)  # Ensure valid range
-
-            # # Handle different input scales
-            # if np.min(res_x) < 0 or np.max(res_x) <= 1:
-            #   # Rescale from [-1, 1] or [0, 1] to [0, 255]
-            #   res_x = ((res_x - np.min(res_x)) / (np.max(res_x) - np.min(res_x))) * 255
-
-            # Ensure image values are between 0 and 255 and convert to uint8
-            # res_x = np.clip(res_x, 0, 255).astype(np.uint8)
-
             res_x = hist_eq(res_x, quantile=self.hist_eq_quantile)
-            # res_x = np.clip(res_x, 0, 255).astype(np.uint8)
-            # res_x = np.clip(res_x, -1, 1).astype(np.uint8)
             res_x = (res_x - 127.5)/127.5
 
             print("Histogram Equalization applied")
@@ -216,27 +190,24 @@ class Transformer:
       transformation_list = []
       if self.include_new_transformations:
 
-        for flip, tx, ty, k_rotate, zoom in itertools.product(
-          # for flip, tx, ty, k_rotate, zoom, crop_size, color_jitter, hist_eq in itertools.product(
+        for flip, tx, ty, k_rotate, zoom, crop_size, color_jitter, hist_eq in itertools.product(
             [False, True],
              [0, -self.max_tx, self.max_tx],
               [0, -self.max_ty, self.max_ty], 
             range(4),
             [1.0, 1.2],
-            # [None, (20, 20)],
-            #  [False, True], 
-            #  [False, True]
+            [None, (20, 20)],
+             [False, True], 
+             [False, True]
         ):
             self._transformation_list.append(
                 AffineTransformation(
                     flip=flip, tx=tx, ty=ty, k_90_rotate=k_rotate,
                     zoom=zoom, 
-                    # shear=shear,
-                    # crop_size=self.crop_size if np.random.rand() > 0.5 else None,
-                    # crop_size=crop_size,
-                    # color_jitter=color_jitter,
-                    # histogram_eq=hist_eq,
-                    # hist_eq_quantile=self.hist_eq_quantile
+                    crop_size=crop_size,
+                    color_jitter=color_jitter,
+                    histogram_eq=hist_eq,
+                    hist_eq_quantile=self.hist_eq_quantile,
                     output_size = self.output_size
                 )
             )
@@ -248,9 +219,6 @@ class Transformer:
               [0, -self.max_ty, self.max_ty],
                range(4)
         )
-        # transformation_list = list(transformation_list)
-        # print(f"transformation_list: {(transformation_list)}")
-
         for flip, tx, ty, k_rotate in transformation_list:
           self._transformation_list.append(
               AffineTransformation(

@@ -19,14 +19,6 @@ conda activate poetry_env
 
 # Add globally installed Poetry to PATH
 export PATH="/home/hpc/iwai/iwai120h/.local/bin:$PATH"
-# source /home/hpc/iwai/iwai120h/new_experiments/.venv/bin/activate
-
-# poetry install
-# Ensure Poetry is installed and accessible
-# poetry --version || { echo "Poetry is not installed in the activated environment"; exit 1; }
-
-# Poetry install with verbosity
-# poetry install -v
 
 # Record start time
 START_TIME=$(date +%s)

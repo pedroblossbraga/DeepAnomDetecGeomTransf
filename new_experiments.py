@@ -6,7 +6,6 @@ import tensorflow_datasets as tfds
 import numpy as np
 import os
 from keras.utils import to_categorical
-from IPython.display import display
 import pandas as pd
 import time
 from datetime import datetime
@@ -16,19 +15,12 @@ from utils import load_cats_vs_dogs_tfds, save_dataset_tf, load_dataset_tf, get_
 from model import create_wide_residual_network
 from performance import save_roc_pr_curve_data
 from scores import compute_scores, compute_scores_with_entropy
-from plots import save_layer_activation, plot_roc_auc_comparison
+from plots import plot_roc_auc_comparison
 
-#from google.colab import drive
-# Mount Google Drive
-#drive.mount('/content/drive', force_remount=True)
 TODAYS_DT = datetime.now().strftime('%Y-%m-%d-%H%M')
-# OUTPUT_DIR = f'./results_experiments_{TODAYS_DT}_zoom'
 OUTPUT_DIR = f'./results_experiments_{TODAYS_DT}_NoNewTransf_20epochs'
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-# dataset_dir = os.path.join(OUTPUT_DIR, 'cats_vs_dogs')
-# os.makedirs(dataset_dir, exist_ok=True)
-
 
 def apply_transformations_batch(x_train_task, y_train, transformer, single_class_ind):
   t_inds = np.tile(np.arange(transformer.n_transforms), len(x_train_task))
@@ -93,10 +85,6 @@ def main_experiment(
         crop_size=(28, 28),
         output_size=(64, 64)
     )
-
-    # dogs_train_features = x_train[y_train.flatten() == 1]
-    # dogs_train_labels = y_train[y_train.flatten() == 1]
-
     if f'cats_vs_dogs_data_split80_{int(N_sample_train)}.tfrecord' in os.listdir(OUTPUT_DIR) and load_precomputed:
         print('loading task images (task_train_features, task_train_labels)...')
         task_train_features, task_train_labels = load_dataset_tf(
@@ -185,29 +173,10 @@ def main_experiment(
         x_train_task_transformed,
         to_categorical(t_inds),
         batch_size=128,
-        # epochs=int(np.ceil(200 / transformer.n_transforms))
-        # epochs=200
         epochs=epochs
     )
     print('saving weights...')
     model.save_weights(os.path.join(OUTPUT_DIR, f'{dataset_name}_class_{single_class_ind}_{TODAYS_DT}.weights.h5'))
-
-    # print('saving -3 layer...')
-    # try:
-    #     # Save activations for layer -3 for the first test image
-    #     test_image = x_test[0]
-    #     nn_layer_img = f'layer_3_activation_class_{single_class_ind}.png'
-    #     save_layer_activation(
-    #         model=model, 
-    #         layer_index=-3, 
-    #         input_image=test_image, 
-    #         file_path=os.path.join(OUTPUT_DIR, nn_layer_img)
-    #     )
-    #     print('checking: nn_layer_img in dir: {}'.format(
-    #         nn_layer_img in os.listdir(OUTPUT_DIR)
-    #     ))
-    # except Exception as e:
-    #     print('error saving layer activation: {}'.format(e))
 
     t0=time.time()
     print('applying scores...')
@@ -221,17 +190,6 @@ def main_experiment(
     print('y_test shape: {}'.format(y_test.shape))
 
     try:
-        # # Save scores and labels to results DataFrame
-        # results_df = pd.DataFrame({
-        #     'scores': scores,
-        #     'predictions': predictions,
-        #     'true_label': y_test.flatten(),
-        #     'is_anomalous': y_test.flatten() != single_class_ind
-        # })
-        # results_df.to_csv(
-        #     os.path.join(OUTPUT_DIR, f'{dataset_name}_class_{single_class_ind}_results.csv'), 
-        #     index=False
-        # )
         np.savez_compressed(os.path.join(OUTPUT_DIR, 
             f'{dataset_name}_newtransf{str(include_new_transformations)}_class{single_class_ind}_results_{TODAYS_DT}.npz'),
                         scores=scores, predictions=predictions,
@@ -262,17 +220,6 @@ def main_experiment(
 
     print('scores_entrop shape: {}, predictions_entrop shape: {}'.format(scores_entrop.shape, predictions_entrop[0].shape))
     try:
-        # # Save scores and labels to results DataFrame
-        # results_df = pd.DataFrame({
-        #     'scores': scores,
-        #     'predictions': predictions,
-        #     'true_label': y_test.flatten(),
-        #     'is_anomalous': y_test.flatten() != single_class_ind
-        # })
-        # results_df.to_csv(
-        #     os.path.join(OUTPUT_DIR, f'{dataset_name}_class_{single_class_ind}_results.csv'), 
-        #     index=False
-        # )
         np.savez_compressed(os.path.join(OUTPUT_DIR, 
             f'{dataset_name}_newtransf{str(include_new_transformations)}_class{single_class_ind}_results_scores_entropy_{TODAYS_DT}.npz'),
                         scores_entrop=scores_entrop, predictions=predictions_entrop,
