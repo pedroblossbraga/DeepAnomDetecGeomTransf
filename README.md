@@ -17,5 +17,5 @@ Experiments and extensions to the method provided in "Deep Anomaly Detection usi
 ## References
 
         [1] I. Golan and R. El-Yaniv, in Advances in Neural Information Processing Sys-
-tems, edited by S. Bengio, H. Wallach, H. Larochelle, K. Grauman, N. Cesa-
-Bianchi, and R. Garnett (Curran Associates, Inc., 2018), vol. 31.
+        tems, edited by S. Bengio, H. Wallach, H. Larochelle, K. Grauman, N. Cesa-
+        Bianchi, and R. Garnett (Curran Associates, Inc., 2018), vol. 31.
