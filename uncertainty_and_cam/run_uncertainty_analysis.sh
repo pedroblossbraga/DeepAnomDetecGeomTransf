@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #
-#SBATCH --gres=gpu:a100:1             # Request n A100 GPUs
+#SBATCH --gres=gpu:a100:2             # Request n A100 GPUs
 #SBATCH --partition=a100             # GPU partition
 #SBATCH --time=15:00:00               # Max runtime 
 #SBATCH --output=logs/job_output_%j.log   # Capture stdout to a log file
@@ -33,7 +33,7 @@ START_TIME=$(date +%s)
 
 # run script
 # poetry run python gpu_version.py
-poetry run python new_experiments.py
+poetry run python main.py
 
 # Record end time and compute total duration
 END_TIME=$(date +%s)

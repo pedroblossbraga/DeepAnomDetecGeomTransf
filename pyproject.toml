@@ -17,6 +17,10 @@ matplotlib = "^3.10.0"
 scipy = "^1.15.0"
 scikit-image = "^0.25.0"
 opencv-python = "^4.10.0.84"
+ipykernel = "^6.29.5"
+jupyterlab = "^4.3.4"
+tensorflow-datasets = "^4.9.7"
+seaborn = "^0.13.2"
 
 
 [build-system]

@@ -58,7 +58,8 @@ def load_cats_vs_dogs_tfds(img_size=(64, 64)):
 
 def save_dataset_tf(tfrecord_path,
                     record_name,
-                    x, y=None):
+                    x, y=None,
+                    dataset_name='cats_vs_dogs'):
     # Ensure the directory exists
     os.makedirs(tfrecord_path, exist_ok=True)
 
@@ -94,13 +95,13 @@ def _parse_function(proto):
         'image': tf.io.FixedLenFeature([], tf.string),  # 'image' is stored as a byte string
         'label': tf.io.FixedLenFeature([1], tf.int64),  # 'label' is an int64 array with length 1
     }
-    
+
     # Parse the example using the feature definition
     parsed_features = tf.io.parse_single_example(proto, keys_to_features)
-    
+
     # Decode the image data (JPEG encoded)
     parsed_features['image'] = tf.io.decode_jpeg(parsed_features['image'], channels=3)  # decode to 3 channels RGB
-    
+
     return parsed_features['image'], parsed_features['label']
 
 def load_dataset_tf(tfrecord_path):
@@ -140,3 +141,8 @@ def get_class_name_from_index(index, dataset_name):
     }
 
     return ind_to_name[dataset_name][index]
+
+# N_sample_test = 20
+# x_test, y_test = load_dataset_tf(
+#             os.path.join(OUTPUT_DIR,  f'cats_vs_dogs_data_split80_{int(N_sample_test)}_test.tfrecord')
+#         )
